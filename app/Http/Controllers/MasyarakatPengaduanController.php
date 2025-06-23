@@ -7,7 +7,7 @@ use App\Models\Masyarakat; // Pastikan model Masyarakat sudah di-import
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Auth; // Penting: Import Facades Auth
+use Illuminate\Support\Facades\Auth; // Penting: Import Facades Auth  
 
 class MasyarakatPengaduanController extends Controller
 {
