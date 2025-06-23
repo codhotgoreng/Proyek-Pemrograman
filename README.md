@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## About
 Ini adalah web pengaduan masyarakat menggunakan framework Laravel
 
@@ -27,3 +28,7 @@ Ini adalah web pengaduan masyarakat menggunakan framework Laravel
 ## catatan
 Ada sedikit setting untuk database setelah melakukan migration, yakni pada table petugas, tanggapan dan pengaduan, centang auto increment(A_I) secara manual di database pada phpMyadmin.
 Untuk instalasai lebih jelas silahkan kontak saya di instagram <p><a href="https://instagram.com/lalusahibul_" target="_blank">lalusahibul_</a></p>
+=======
+# Proyek-Pemrograman
+FP PP
+>>>>>>> 8d9b82d87298d81f2c6c1ab92aad734587511911
