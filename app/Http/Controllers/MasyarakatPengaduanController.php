@@ -110,18 +110,21 @@ class MasyarakatPengaduanController extends Controller
      * @param  string  $id_pengaduan
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_pengaduan) // Ubah parameter menjadi $id_pengaduan string
+    public function edit($id_pengaduan)
     {
-        $pengaduan = Pengaduan::where('id_pengaduan', $id_pengaduan)->firstOrFail(); // Gunakan firstOrFail
-
-        // Pastikan hanya pemilik pengaduan yang bisa mengedit
+        $pengaduan = Pengaduan::where('id_pengaduan', $id_pengaduan)->firstOrFail();
+    
+        if (!Auth::guard('masyarakat')->check()) {
+            abort(403, 'Anda belum login sebagai masyarakat.');
+        }
+    
         if (Auth::guard('masyarakat')->user()->nik !== $pengaduan->nik) {
             abort(403, 'Anda tidak memiliki izin untuk mengedit pengaduan ini.');
         }
-
-        // Tidak perlu mengambil data Masyarakat lagi di sini
+    
         return view('masyarakat.pengaduan.edit', ['pengaduan' => $pengaduan]);
     }
+    
 
     /**
      * Update the specified resource in storage.
