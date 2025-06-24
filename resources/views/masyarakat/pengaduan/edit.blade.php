@@ -11,13 +11,11 @@
                     <input type="date" class="form-control" id="tgl_pengaduan" name="tgl_pengaduan" max="{{ date('Y-m-d') }}">
                 </div>
                 <div class="form-group">
-                    <label for="nik"><span class="required"> Pembuat Pengaduan</span></label>
-                    <select id="nik"name="nik" class="form-control">
-                        @foreach ($masyarakat as $row)
-                            <option value="{{ $row->nik }}">{{ $row->nama }}</option>
-                        @endforeach
-                    </select>
+                    <label><span class="required">Pembuat Pengaduan</span></label>
+                    <input type="text" class="form-control" value="{{ $pengaduan->masyarakat->nama ?? '-' }}" readonly>
+                    <input type="hidden" name="nik" value="{{ $pengaduan->nik }}">
                 </div>
+                
 
                 <div class="form-group">
                     <label for="isi_laporan"><span class="required">Isi Laporan</span></label>
