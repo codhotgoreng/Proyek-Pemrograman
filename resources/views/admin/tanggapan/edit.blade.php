@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label for="tgl_tanggapan"><span class="required">Tanggal Tanggapan</span></label>
                         <input type="date" class="form-control" id="tgl_tanggapan" placeholder="tgl_tanggapan"
-                            name="tgl_tanggapan" value="{{ $tanggapan->tgl_tanggapan }}">
+                            name="tgl_tanggapan" value="{{ $tanggapan->tgl_tanggapan }}" max="{{ date('Y-m-d') }}">
                         @error('tgl_tanggapan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
