@@ -35,6 +35,16 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="lokasi">Lokasi</label><br>
+                        <button type="button" class="btn btn-primary mb-2" onclick="ambilLokasi()">Ambil Lokasi Saya</button>
+                    
+                        <input type="text" name="latitude" id="latitude" class="form-control mb-2" placeholder="Latitude" readonly>
+                        <input type="text" name="longitude" id="longitude" class="form-control" placeholder="Longitude" readonly>
+                    
+                        <small id="lokasiStatus" class="text-muted"></small>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="foto"><span class="required">Foto</span></label>
                         <input type="file" class="form-control" id="foto" placeholder="foto" name="foto">
                     </div>
@@ -48,4 +58,36 @@
             </div>
         </div>
     </form>
+    <script>
+        function ambilLokasi() {
+            const statusEl = document.getElementById("lokasiStatus");
+    
+            if (navigator.geolocation) {
+                statusEl.textContent = "Mengambil lokasi...";
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                    statusEl.textContent = "Lokasi berhasil diambil!";
+                }, function (error) {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            statusEl.textContent = "Izin lokasi ditolak.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            statusEl.textContent = "Lokasi tidak tersedia.";
+                            break;
+                        case error.TIMEOUT:
+                            statusEl.textContent = "Waktu pengambilan lokasi habis.";
+                            break;
+                        default:
+                            statusEl.textContent = "Terjadi kesalahan saat mengambil lokasi.";
+                            break;
+                    }
+                });
+            } else {
+                statusEl.textContent = "Browser tidak mendukung geolokasi.";
+            }
+        }
+    </script>
+    
 @endsection

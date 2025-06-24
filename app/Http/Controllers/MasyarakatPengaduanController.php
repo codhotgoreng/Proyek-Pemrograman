@@ -48,44 +48,45 @@ class MasyarakatPengaduanController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // Pastikan pengguna 'masyarakat' sudah login sebelum membuat pengaduan
-        if (!Auth::guard('masyarakat')->check()) {
-            return redirect()->back()->with('error', 'Anda harus login sebagai masyarakat untuk membuat pengaduan.');
-        }
-
-        // Ambil objek pengguna yang sedang login
-        $user = Auth::guard('masyarakat')->user();
-
-        // Validasi data input dari formulir
-        $validatedData = $request->validate([
-            // tgl_pengaduan: wajib diisi, berupa tanggal, dan tidak boleh melebihi hari ini
-            'tgl_pengaduan' => 'required|date|before_or_equal:' . date('Y-m-d'),
-            // nik tidak perlu divalidasi dari request karena akan diambil dari user yang login
-            'isi_laporan' => 'required|string|max:2000', // Batasi panjang isi laporan
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Opsional, hanya gambar, max 2MB
-        ]);
-
-        $fotoName = null;
-        if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
-            $extension = $foto->getClientOriginalExtension();
-            $imageName = date('Ymd_His') . '_' . uniqid() . '.' . $extension; // Tambah uniqid untuk lebih unik
-            $foto->move(public_path('foto'), $imageName);
-            $fotoName = $imageName; // Simpan nama file foto untuk database
-        }
-
-        // Buat record pengaduan baru
-        Pengaduan::create([
-            'tgl_pengaduan' => $validatedData['tgl_pengaduan'],
-            'nik' => $user->nik, // NIK diambil dari pengguna yang sedang login
-            'isi_laporan' => $validatedData['isi_laporan'],
-            'foto' => $fotoName, // Gunakan $fotoName yang mungkin null jika tidak ada foto
-            'status' => '0', // Set status awal pengaduan (misal: 0 = Menunggu)
-        ]);
-
-        return redirect('masyarakat_pengaduan')->with('success', 'Pengaduan Anda berhasil dikirim!');
+{
+    if (!Auth::guard('masyarakat')->check()) {
+        return redirect()->back()->with('error', 'Anda harus login sebagai masyarakat untuk membuat pengaduan.');
     }
+
+    $user = Auth::guard('masyarakat')->user();
+
+    // ✅ Tambahkan validasi latitude & longitude
+    $validatedData = $request->validate([
+        'tgl_pengaduan' => 'required|date|before_or_equal:' . date('Y-m-d'),
+        'isi_laporan' => 'required|string|max:2000',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+    ]);
+
+    $fotoName = null;
+    if ($request->hasFile('foto')) {
+        $foto = $request->file('foto');
+        $extension = $foto->getClientOriginalExtension();
+        $imageName = date('Ymd_His') . '_' . uniqid() . '.' . $extension;
+        $foto->move(public_path('foto'), $imageName);
+        $fotoName = $imageName;
+    }
+
+    // ✅ Simpan juga lokasi (jika tersedia)
+    Pengaduan::create([
+        'tgl_pengaduan' => $validatedData['tgl_pengaduan'],
+        'nik' => $user->nik,
+        'isi_laporan' => $validatedData['isi_laporan'],
+        'foto' => $fotoName,
+        'status' => '0',
+        'latitude' => $request->latitude,
+        'longitude' => $request->longitude,
+    ]);
+
+    return redirect('masyarakat_pengaduan')->with('success', 'Pengaduan Anda berhasil dikirim!');
+}
+
 
     /**
      * Display the specified resource.
