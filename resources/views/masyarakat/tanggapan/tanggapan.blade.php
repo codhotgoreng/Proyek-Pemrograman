@@ -12,7 +12,7 @@
                             <th scope="col">Tanggal Tanggapan</th>
                             <th scope="col">Isi Tanggapan</th>
                             <th scope="col">Nama Petugas</th>
-                            <th scope="col">Aksi</th>
+                            {{-- <th scope="col">Aksi</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -30,10 +30,10 @@
 
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     <a href="/masyarakat_tanggapan/{{ $row->id_tanggapan }}"
                                         class="btn btn-info m-2">Detail</a>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
