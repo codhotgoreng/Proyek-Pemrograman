@@ -38,8 +38,8 @@
                     <button type="button" class="btn btn-primary mb-2" onclick="getLocation()">Ambil Lokasi Saya</button>
                     <input type="hidden" name="latitude" id="latitude" class="form-control mb-2" placeholder="Latitude" readonly>
                     <input type="hidden" name="longitude" id="longitude" class="form-control" placeholder="Longitude" readonly>
-                    <small id="lokasiStatus" class="text-muted"></small>
                     <div id="previewMap" style="height: 300px;" class="mt-3"></div>
+                    <small id="lokasiStatus" class="text-muted"></small>
 
                 </div>
 
@@ -63,6 +63,7 @@
 @section('scripts')
 <script>
     let map;
+    let marker;
 
     function initMap(lat, lng) {
         const lokasi = { lat: lat, lng: lng };
@@ -70,37 +71,53 @@
             zoom: 15,
             center: lokasi,
         });
-        new google.maps.Marker({
+        marker = new google.maps.Marker({
             position: lokasi,
             map: map,
+            title: "Lokasi Anda",
         });
     }
 
-    function getLocation() {
+   function getLocation() {
         if (!navigator.geolocation) {
             alert("Browser tidak mendukung Geolocation.");
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+            function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
 
-                document.getElementById('latitude').value = latitude;
-                document.getElementById('longitude').value = longitude;
-                alert("Lokasi berhasil diambil!");
+                document.getElementById("latitude").value = lat;
+                document.getElementById("longitude").value = lng;
 
-                initMap(latitude, longitude); // Panggil Google Maps
+                document.getElementById("lokasiStatus").innerText = `Lokasi berhasil diambil: Lat ${lat}, Lng ${lng}`;
+
+                initMap(lat, lng);
             },
-            function(error) {
-                alert("Gagal ambil lokasi: " + (error.message || "Unknown error"));
-                console.error(error);
+            function (error) {
+                let pesan = "";
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        pesan = "Izin lokasi ditolak.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        pesan = "Informasi lokasi tidak tersedia.";
+                        break;
+                    case error.TIMEOUT:
+                        pesan = "Permintaan lokasi melebihi waktu tunggu.";
+                        break;
+                    default:
+                        pesan = "Terjadi kesalahan tidak diketahui.";
+                }
+                document.getElementById("lokasiStatus").innerText = pesan;
+                console.error("Gagal ambil lokasi:", error);
             },
             {
                 enableHighAccuracy: true,
                 timeout: 10000,
-                maximumAge: 0
+                maximumAge: 0,
             }
         );
     }
