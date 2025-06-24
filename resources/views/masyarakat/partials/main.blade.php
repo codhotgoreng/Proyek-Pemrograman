@@ -220,6 +220,8 @@
 
     <!-- Template Javascript -->
     <script src="/loginassets/js/main.js"></script>
+        <!-- Section untuk JavaScript tambahan -->
+        @yield('scripts')
 </body>
 
 </html>
