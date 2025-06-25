@@ -24,8 +24,13 @@ use App\Http\Controllers\MasyarakatTanggapanController;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('landing');
 });
+
+
+// Route::get('/', function () {
+//     return view('index');
+// });
 
 Route::get('/login', function () {
     return view('login');
